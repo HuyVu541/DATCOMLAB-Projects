@@ -147,7 +147,7 @@ def choose_parameters(trend):
         return rsi_strategies[:strategies_num]
 # Tra ve 4 cai profit cao nhat sao cho dung trend    
 
-def backtest(data, start_global = 0, total_budget = 10000000, current_date = 0, advance = False):
+def backtest(data, total_budget = 10000000, current_date = 0, advance = False):
     
     # Creating intial parameters
     current_date = 0
