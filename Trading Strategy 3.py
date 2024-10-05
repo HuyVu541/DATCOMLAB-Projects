@@ -16,6 +16,55 @@ strategies_num = 2
 df = vns.stock_historical_data(symbol = ticker, start_date="2014-07-01", 
                             end_date='2024-07-01', resolution='1D', type='stock')
 
+
+def calculate_indicators(data):
+    add_mfi(data)
+
+    add_psar(data)
+
+    data = data[['time', 'close', 'MFI', 'PSAR', 'rev']]
+
+    # data.set_index('time', inplace = True)
+
+    data = data.dropna()
+
+    add_bollinger_bands(data)
+
+    add_rsi(data)
+
+    add_macd(data)
+
+    data.dropna(inplace = True)
+    
+    data.reset_index(inplace = True, drop = True)
+
+    data['sma10'] = data['close'].rolling(window = 10, min_periods = 1).mean()
+    
+    data['sma20'] = data['close'].rolling(window = 20, min_periods = 1).mean()
+
+    data['sma50'] = data['close'].rolling(window = 50, min_periods = 1).mean()
+
+    data['sma200'] = data['close'].rolling(window = 200, min_periods = 1).mean()
+    
+    data['ema'] = data['close'].ewm(span = 10).mean()
+
+    add_trend(data)
+
+    psar_trend(data)
+
+    return data
+
+def calculate_all_signals(data):
+    add_RSI_signal(data)
+    add_MFI_signal(data)
+    add_MACD_signal(data)
+    add_BOLL_signal(data)
+    add_PSAR_signal(data)
+    return data
+
+df = calculate_indicators(df)
+df = calculate_all_signals(df)
+
 df_len = len(df)
 train_length = 0.8
 start_global = round(df_len * train_length)
